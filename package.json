@@ -1,0 +1,16 @@
+{
+  "name": "kaohe4",
+  "version": "1.0.0",
+  "description": "单位科室及中队互评评分系统",
+  "scripts": {
+    "dev:backend": "chcp 65001 >nul && cd backend && npm run dev",
+    "dev:frontend": "chcp 65001 >nul && cd frontend && npm run dev",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": ["考核", "评分", "互评"],
+  "author": "",
+  "license": "MIT"
+}
+

@@ -1,0 +1,1 @@
+﻿src/components/AdvancedSignature.tsx(322,11): error TS6133: 'finishSignature' is declared but its value is never read.
