@@ -16,6 +16,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// 信任代理（云平台部署时需要，用于正确获取客户端IP）
+app.set('trust proxy', 1);
+
 // 安全性配置：添加helmet保护HTTP头
 app.use(helmet());
 
