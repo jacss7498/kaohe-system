@@ -1,5 +1,4 @@
 {
-    "build_command": "npm install && npm run build",
-    "start_command": "npm run start",
-    "output_dir": "dist"
+    "build_command": "npm install --include=dev && npm run build",
+    "start_command": "npm run start"
 }
