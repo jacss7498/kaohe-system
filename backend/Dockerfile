@@ -10,7 +10,7 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 
 # 安装所有依赖（包括devDependencies，用于TypeScript编译）
-RUN npm ci
+RUN npm ci --include=dev
 
 # 复制源代码
 COPY . .
