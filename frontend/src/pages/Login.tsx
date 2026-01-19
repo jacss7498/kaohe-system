@@ -48,13 +48,8 @@ export default function Login() {
         // 使用 useAuth 的 login 函数来更新全局状态
         await login(username.trim(), password.trim(), captchaId, captchaCode.trim());
 
-        // login 成功后，获取最新用户信息判断是否需要强制修改密码
-        const response = await api.get('/auth/me');
-        if (response.data.user.mustChangePassword) {
-          navigate('/force-change-password');
-        } else {
-          navigate('/dashboard');
-        }
+        // 登录成功后直接导航，让 ProtectedRoute 处理强制修改密码的重定向
+        navigate('/dashboard');
       } catch (loginError: any) {
         // 登录失败，刷新验证码
         fetchCaptcha();

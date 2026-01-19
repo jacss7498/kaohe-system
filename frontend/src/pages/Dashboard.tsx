@@ -32,14 +32,14 @@ export default function Dashboard() {
   const fetchTasks = async (forceRefresh = false) => {
     try {
       // 添加强制刷新参数，避免缓存
-      const url = forceRefresh 
-        ? `/tasks/my-tasks?t=${Date.now()}` 
+      const url = forceRefresh
+        ? `/tasks/my-tasks?t=${Date.now()}`
         : '/tasks/my-tasks';
-      
+
       const response = await api.get(url);
       console.log('获取任务数据响应:', response.data);
       const tasksData = response.data || [];
-      
+
       // 确保每个任务都有投票进度数据
       const tasksWithProgress = tasksData.map((task: any) => {
         if (!task.votingProgress) {
@@ -55,7 +55,7 @@ export default function Dashboard() {
         console.log(`任务 ${task.id} (${task.name}): 投票进度=${task.votingProgress.completed}/${task.votingProgress.total}`);
         return task;
       });
-      
+
       setTasks(tasksWithProgress);
     } catch (error) {
       console.error('获取任务失败:', error);
@@ -67,12 +67,12 @@ export default function Dashboard() {
   useEffect(() => {
     // 首次加载
     fetchTasks(false);
-    
+
     // 每3秒自动刷新一次，实现实时更新（缩短间隔以便更快看到更新）
     const interval = setInterval(() => {
       fetchTasks(false);
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -80,35 +80,35 @@ export default function Dashboard() {
   useEffect(() => {
     const currentPath = location.pathname;
     const locationState = location.state as { refresh?: boolean; taskId?: number; timestamp?: number } | null;
-    
+
     // 如果路由状态中有刷新标志，立即刷新
     if (currentPath === '/dashboard' && locationState?.refresh) {
       console.log('检测到刷新标志，准备刷新投票进度...', locationState);
-      
+
       // 立即强制刷新一次（带时间戳避免缓存）
       fetchTasks(true);
-      
+
       // 延迟刷新，确保后端数据已更新
       const refreshTimeout1 = setTimeout(() => {
         console.log('第一次延迟刷新投票进度数据...');
         fetchTasks(true);
       }, 1000);
-      
+
       // 再次延迟刷新，确保数据完全更新
       const refreshTimeout2 = setTimeout(() => {
         console.log('第二次延迟刷新投票进度数据...');
         fetchTasks(true);
       }, 2500);
-      
+
       // 清除状态，避免重复刷新
       window.history.replaceState({}, '', '/dashboard');
-      
+
       return () => {
         clearTimeout(refreshTimeout1);
         clearTimeout(refreshTimeout2);
       };
     }
-    
+
     // 如果从评分页面返回，也刷新
     const prevPath = prevLocationRef.current;
     if (currentPath === '/dashboard' && prevPath && prevPath.startsWith('/score/') && !locationState?.refresh) {
@@ -118,7 +118,7 @@ export default function Dashboard() {
         fetchTasks(true);
       }, 1500);
     }
-    
+
     prevLocationRef.current = currentPath;
   }, [location.pathname, location.state]);
 
@@ -137,7 +137,7 @@ export default function Dashboard() {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleFocus);
-    
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleFocus);
@@ -223,8 +223,7 @@ export default function Dashboard() {
                       {task.votingProgress && task.votingProgress.total > 0 && (<div className="text-xs text-gray-500 mt-1 text-right">完成率: {Math.round((task.votingProgress.completed / task.votingProgress.total) * 100)}%</div>)}
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => navigate('/admin/statistics')} className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700">查看详情</button>
-                      <button onClick={() => navigate('/admin/statistics')} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">导出结果</button>
+                      <button onClick={() => navigate(`/admin/statistics/${task.id}`)} className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700">查看详情</button>
                     </div>
                   </div>
                 ))}
@@ -302,11 +301,10 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      task.isCompleted
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${task.isCompleted
                         ? 'bg-green-100 text-green-800'
                         : 'bg-blue-100 text-blue-800'
-                    }`}
+                      }`}
                   >
                     {task.isCompleted ? '已完成' : '待完成'}
                   </span>
@@ -328,8 +326,8 @@ export default function Dashboard() {
                     <div
                       className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                       style={{
-                        width: `${task.votingProgress && task.votingProgress.total > 0 
-                          ? Math.round((task.votingProgress.completed / task.votingProgress.total) * 100) 
+                        width: `${task.votingProgress && task.votingProgress.total > 0
+                          ? Math.round((task.votingProgress.completed / task.votingProgress.total) * 100)
                           : 0}%`,
                       }}
                     />
